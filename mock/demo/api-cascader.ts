@@ -1,6 +1,5 @@
 import type { MockMethod } from 'vite-plugin-mock'
 import { resultSuccess } from '../_util'
-
 const areaList: any[] = [
   {
     id: '530825900854620160',
@@ -319,7 +318,9 @@ export default [
       if (!parentCode)
         return resultSuccess(areaList.filter(it => it.code === '430000'))
 
-      return resultSuccess(areaList.filter(it => it.parentCode === parentCode))
+      return resultSuccess(
+        areaList.filter(it => it.parentCode === parentCode),
+      )
     },
   },
 ] as MockMethod[]

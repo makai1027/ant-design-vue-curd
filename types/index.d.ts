@@ -26,3 +26,7 @@ declare type ComponentRef<T extends HTMLElement = HTMLDivElement> =
   ComponentElRef<T> | null;
 
 declare type ElRef<T extends HTMLElement = HTMLDivElement> = Nullable<T>;
+
+export declare type Slot = (...args: any[]) => VNode[];
+
+export declare type Slots = Readonly<InternalSlots>;

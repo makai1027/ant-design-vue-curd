@@ -30,7 +30,7 @@
     "types/**/*.ts",
     "mock/**/*.ts"
   ],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "vue-project"],
   "vueCompilerOptions": {
     "target": 2.7
   }
