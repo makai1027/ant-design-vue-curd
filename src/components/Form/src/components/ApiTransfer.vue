@@ -2,7 +2,7 @@
   <Transfer
     :data-source="getdataSource"
     :filter-option="filterOption"
-    :render="(item) => item.title"
+    :render="renderHandler"
     :showSelectAll="showSelectAll"
     :selectedKeys="selectedKeys"
     :targetKeys="getTargetKeys"
@@ -12,7 +12,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, watch, ref, unref, watchEffect } from "vue";
+import {
+  computed,
+  defineComponent,
+  watch,
+  ref,
+  unref,
+  onBeforeMount,
+} from "vue";
 import { Transfer } from "ant-design-vue";
 import { isFunction } from "@/utils/is";
 import { get, omit } from "lodash-es";
@@ -95,7 +102,7 @@ export default defineComponent({
       emit("change", keys);
     }
 
-    watchEffect(() => {
+    onBeforeMount(() => {
       props.immediate && !props.alwaysLoad && fetch();
     });
 
@@ -135,7 +142,15 @@ export default defineComponent({
     function emitChange() {
       emit("options-change", unref(getdataSource));
     }
-    return { getTargetKeys, getdataSource, getAttrs, handleChange };
+
+    const renderHandler = (item: Recordable) => item.title;
+    return {
+      getTargetKeys,
+      getdataSource,
+      getAttrs,
+      handleChange,
+      renderHandler,
+    };
   },
 });
 </script>

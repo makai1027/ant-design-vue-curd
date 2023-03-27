@@ -2,22 +2,26 @@
   <div title="表单基础示例" contentFullHeight>
     <a-card size="small" title="基础示例">
       <BasicForm
+        ref="basicform"
         autoFocusFirstItem
         :labelWidth="200"
         :schemas="schemas"
+        :merge-dynamic-data="mergeData"
         :actionColOptions="{ span: 24 }"
         :autoSubmitOnEnter="true"
         @submit="handleSubmit"
         @reset="handleReset"
       >
-        <template name="selectA" slot-scope="{ model, field }">
-          <a-select
-            :options="optionsA"
-            mode="multiple"
-            v-model="model[field]"
-            @change="valueSelectA = model[field]"
-            allowClear
-          />
+        <template #selectA="{ values, model, field }">
+          <span>
+            <a-select
+              :options="optionsA"
+              mode="multiple"
+              v-model="model[field]"
+              @change="valueSelectA = model[field]"
+              allowClear
+            />
+          </span>
         </template>
         <template #selectB="{ model, field }">
           <a-select
@@ -32,7 +36,7 @@
           <ApiSelect
             :api="optionsListApi"
             showSearch
-            v-model="model[field]"
+            :value.sync="model[field]"
             optionFilterProp="label"
             resultField="list"
             labelField="name"
@@ -43,7 +47,7 @@
           <ApiSelect
             :api="optionsListApi"
             showSearch
-            v-model="model[field]"
+            :value.sync="model[field]"
             :filterOption="false"
             resultField="list"
             labelField="name"
@@ -57,7 +61,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, unref, ref } from "vue";
+import { computed, defineComponent, unref, ref, reactive } from "vue";
 import { BasicForm, FormSchema, ApiSelect } from "@/components/Form/index";
 import { optionsListApi } from "@/api/demo/select";
 import { useDebounceFn } from "@vueuse/core";
@@ -410,6 +414,7 @@ const schemas: FormSchema[] = [
     label: "远程下拉树",
     helpMessage: ["ApiTreeSelect组件", "使用接口提供的数据生成选项"],
     required: true,
+    defaultValue: "4",
     componentProps: {
       api: treeOptionsListApi,
       resultField: "list",
@@ -421,7 +426,7 @@ const schemas: FormSchema[] = [
   {
     field: "field34",
     component: "ApiRadioGroup",
-    label: "远程Radio",
+    label: "远程Radio34",
     helpMessage: ["ApiRadioGroup组件", "使用接口提供的数据生成选项"],
     required: true,
     componentProps: {
@@ -435,7 +440,6 @@ const schemas: FormSchema[] = [
       // use id as value
       valueField: "id",
     },
-    defaultValue: "1",
     colProps: {
       span: 8,
     },
@@ -443,7 +447,7 @@ const schemas: FormSchema[] = [
   {
     field: "field35",
     component: "ApiRadioGroup",
-    label: "远程Radio",
+    label: "远程Radio35",
     helpMessage: ["ApiRadioGroup组件", "使用接口提供的数据生成选项"],
     required: true,
     componentProps: {
@@ -552,7 +556,6 @@ const schemas: FormSchema[] = [
     component: "Select",
     label: "互斥SelectA",
     slot: "selectA",
-    defaultValue: [],
     colProps: {
       span: 8,
     },
@@ -562,7 +565,6 @@ const schemas: FormSchema[] = [
     component: "Select",
     label: "互斥SelectB",
     slot: "selectB",
-    defaultValue: [],
     colProps: {
       span: 8,
     },
@@ -583,6 +585,7 @@ const schemas: FormSchema[] = [
     field: "[startTime, endTime]",
     label: "时间范围",
     component: "RangePicker",
+    defaultValue: [],
     componentProps: {
       format: "YYYY-MM-DD HH:mm:ss",
       placeholder: ["开始时间", "结束时间"],
@@ -613,6 +616,7 @@ const schemas: FormSchema[] = [
     field: "field21",
     component: "Slider",
     label: "字段21",
+    defaultValue: [0, 10],
     componentProps: {
       min: 0,
       max: 100,
@@ -654,14 +658,30 @@ export default defineComponent({
     const searchParams = computed<Recordable>(() => {
       return { keyword: unref(keyword) };
     });
-
+    const mergeData = reactive({ page: 1, total: 100 });
+    const basicform = ref();
     function onSearch(value: string) {
       keyword.value = value;
     }
+    setTimeout(() => {
+      mergeData.page = 2;
+      basicform.value.updateSchema({
+        field: "selectA",
+        component: "Select",
+        label: "互斥Se-------lectA",
+        slot: "selectA",
+        defaultValue: [],
+        colProps: {
+          span: 8,
+        },
+      });
+    }, 10000);
     return {
+      basicform,
       schemas,
       optionsListApi,
       optionsA,
+      mergeData,
       optionsB,
       valueSelectA,
       valueSelectB,
@@ -673,6 +693,15 @@ export default defineComponent({
       handleSubmit: (values: any) => {
         console.log("values", values);
         message.success("click search,values:" + JSON.stringify(values));
+      },
+      changerHandler: (
+        value: any[],
+        field: string,
+        values: any,
+        model: any
+      ) => {
+        // basicform.value.setFormModel(field, value);
+        console.log(value, field, values, model, basicform.value);
       },
       check,
     };

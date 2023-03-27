@@ -13,7 +13,14 @@
   </a-cascader>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, ref, unref, watch, watchEffect } from "vue";
+import {
+  defineComponent,
+  PropType,
+  ref,
+  unref,
+  watch,
+  onBeforeMount,
+} from "vue";
 import { Cascader, Icon } from "ant-design-vue";
 import propTypes from "ant-design-vue/es/_util/vue-types/index";
 import { isFunction } from "@/utils/is";
@@ -62,7 +69,7 @@ export default defineComponent({
       type: Array,
     },
   },
-  emits: ["change", "defaultChange"],
+  emits: ["change", "defaultChange", "update:value"],
   setup(props, { emit }) {
     const apiData = ref<any[]>([]);
     const options = ref<Option[]>([]);
@@ -154,10 +161,6 @@ export default defineComponent({
       }
     }
 
-    watchEffect(() => {
-      props.immediate && initialFetch();
-    });
-
     watch(
       () => props.initFetchParams,
       () => {
@@ -167,12 +170,9 @@ export default defineComponent({
     );
 
     watch(
-      () => options.value,
-      (val) => {
-        console.log(val, "@@@@");
-      },
-      {
-        deep: true,
+      () => state.value,
+      (v) => {
+        emit("update:value", v);
       }
     );
 
@@ -190,6 +190,10 @@ export default defineComponent({
       }
       return "";
     }
+
+    onBeforeMount(() => {
+      props.immediate && initialFetch();
+    });
 
     return {
       state,

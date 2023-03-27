@@ -1,6 +1,6 @@
 <template>
-  <a-tree-select v-bind="getAttrs" @change="handleChange">
-    <template #[item]="data" v-for="item in Object.keys($slots)">
+  <a-tree-select v-bind="getAttrs" v-model="state" @change="handleChange">
+    <template #[item]="data" v-for="item in Object.keys(slots)">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
     <template #suffixIcon v-if="loading">
@@ -20,6 +20,9 @@ export default defineComponent({
   name: "ApiTreeSelect",
   components: { ATreeSelect: TreeSelect, [Icon.name]: Icon },
   props: {
+    value: {
+      type: [String, Array],
+    },
     api: {
       type: Function as PropType<(arg?: Recordable) => Promise<Recordable>>,
     },
@@ -27,8 +30,8 @@ export default defineComponent({
     immediate: { type: Boolean, default: true },
     resultField: propTypes.string.def(""),
   },
-  emits: ["options-change", "change"],
-  setup(props, { attrs, emit }) {
+  emits: ["options-change", "change", "update:value"],
+  setup(props, { attrs, emit, slots }) {
     const treeData = ref<Recordable[]>([]);
     const isFirstLoaded = ref<Boolean>(false);
     const loading = ref(false);
@@ -39,8 +42,17 @@ export default defineComponent({
       };
     });
 
-    function handleChange(...args: any[]) {
-      emit("change", ...args);
+    const state = computed({
+      get() {
+        return props.value;
+      },
+      set(val) {
+        emit("update:value", val);
+      },
+    });
+
+    function handleChange(value: any) {
+      emit("change", value);
     }
 
     watch(
@@ -82,7 +94,7 @@ export default defineComponent({
       isFirstLoaded.value = true;
       emit("options-change", treeData.value);
     }
-    return { getAttrs, loading, handleChange };
+    return { getAttrs, loading, handleChange, slots, state };
   },
 });
 </script>

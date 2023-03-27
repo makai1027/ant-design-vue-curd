@@ -60,10 +60,11 @@ export function useFormEvents({
     nextTick(() => {
       clearValidate();
       formModelStr.value = JSON.stringify(formModel);
-      unref(formElRef)?.resetFields();
+      // unref(formElRef)?.resetFields();
+
+      emit("reset", toRaw(formModel));
+      submitOnReset && handleSubmit();
     });
-    emit("reset", toRaw(formModel));
-    submitOnReset && handleSubmit();
   }
 
   /**

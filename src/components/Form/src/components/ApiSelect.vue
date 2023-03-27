@@ -6,7 +6,7 @@
     :options="getOptions"
     v-model="state"
   >
-    <template #[item]="data" v-for="item in Object.keys($slots)">
+    <template #[item]="data" v-for="item in Object.keys(slots)">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
     <template #suffixIcon v-if="loading">
@@ -25,7 +25,7 @@ import {
   defineComponent,
   PropType,
   ref,
-  watchEffect,
+  onBeforeMount,
   computed,
   unref,
   watch,
@@ -65,14 +65,19 @@ export default defineComponent({
     alwaysLoad: propTypes.bool.def(false),
   },
   emits: ["options-change", "change", "update:value"],
-  setup(props, { emit, attrs }) {
+  setup(props, { emit, attrs, slots }) {
     const options = ref<OptionsItem[]>([]);
     const loading = ref(false);
     const isFirstLoad = ref(true);
-    const emitData = ref<any[]>([]);
 
-    // Embedded in the form, just use the hook binding to perform form verification
-    const [state] = useRuleFormItem(props, "value", "change", emitData);
+    const state = computed({
+      get() {
+        return props.value;
+      },
+      set(val) {
+        emit("update:value", val);
+      },
+    });
 
     const getOptions = computed(() => {
       const { labelField, valueField, numberToString } = props;
@@ -90,7 +95,7 @@ export default defineComponent({
       }, [] as OptionsItem[]);
     });
 
-    watchEffect(() => {
+    onBeforeMount(() => {
       props.immediate && !props.alwaysLoad && fetch();
     });
 
@@ -148,10 +153,19 @@ export default defineComponent({
     }
 
     function handleChange(value: any) {
-      emitData.value = value;
+      // @ts-ignore
+      emit("change", value);
     }
 
-    return { state, attrs, getOptions, loading, handleFetch, handleChange };
+    return {
+      state,
+      attrs,
+      getOptions,
+      loading,
+      handleFetch,
+      handleChange,
+      slots,
+    };
   },
 });
 </script>

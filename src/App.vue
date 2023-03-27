@@ -34,6 +34,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "vue";
 import { Layout, ConfigProvider } from "ant-design-vue";
+import { uniqBy } from "lodash-es";
 export default defineComponent({
   components: {
     [Layout.name]: Layout,
@@ -46,6 +47,25 @@ export default defineComponent({
     // Import config from .env
     const collapsed = ref(false);
     const appName = import.meta.env.VITE_APP_NAME;
+    console.log(
+      uniqBy(
+        [
+          {
+            name: "a",
+            test: 1,
+          },
+          {
+            name: "b",
+            test: 1,
+          },
+          {
+            name: "a",
+            test: 333,
+          },
+        ],
+        "name"
+      )
+    );
     return {
       appName,
       collapsed,

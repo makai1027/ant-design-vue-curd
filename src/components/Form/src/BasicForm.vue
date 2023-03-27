@@ -274,7 +274,7 @@ export default defineComponent({
     async function setProps(formProps: Partial<FormProps>): Promise<void> {
       propsRef.value = deepMerge(unref(propsRef) || {}, formProps);
     }
-
+    // 修改某一个值
     function setFormModel(key: string, value: any) {
       const _form = JSON.parse(formModelStr.value);
       _form[key] = value;

@@ -1,6 +1,5 @@
 import type { Slots } from '#/index'
 import { isFunction } from '@/utils/is';
-
 /**
  * @description:  Get slot to prevent empty error
  */

@@ -1,5 +1,5 @@
 <template>
-  <a-tree v-bind="getAttrs" @change="handleChange">
+  <a-tree v-bind="getAttrs">
     <template #[item]="data" v-for="item in Object.keys($slots)">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
@@ -29,7 +29,7 @@ export default defineComponent({
     resultField: propTypes.string.def(""),
     afterFetch: { type: Function as PropType<Fn> },
   },
-  emits: ["options-change", "change"],
+  emits: ["options-change"],
   setup(props, { attrs, emit }) {
     const treeData = ref<Recordable[]>([]);
     const isFirstLoaded = ref<Boolean>(false);
@@ -40,10 +40,6 @@ export default defineComponent({
         ...attrs,
       };
     });
-
-    function handleChange(...args: any[]) {
-      emit("change", ...args);
-    }
 
     watch(
       () => props.params,
@@ -87,7 +83,7 @@ export default defineComponent({
       isFirstLoaded.value = true;
       emit("options-change", treeData.value);
     }
-    return { getAttrs, loading, handleChange };
+    return { getAttrs, loading };
   },
 });
 </script>

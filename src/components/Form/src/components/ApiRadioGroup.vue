@@ -30,14 +30,13 @@ import {
   defineComponent,
   PropType,
   ref,
-  watchEffect,
   computed,
   unref,
   watch,
+  onBeforeMount,
 } from "vue";
 import { Radio } from "ant-design-vue";
 import { isFunction } from "@/utils/is";
-import { useRuleFormItem } from "@/hooks/component/useFormItem";
 import propTypes from "ant-design-vue/es/_util/vue-types/index";
 import { get, omit } from "lodash-es";
 
@@ -78,15 +77,20 @@ export default defineComponent({
     valueField: propTypes.string.def("value"),
     immediate: propTypes.bool.def(true),
   },
-  emits: ["options-change", "change"],
+  emits: ["options-change", "change", "update:value"],
   setup(props, { emit, attrs: AllAttrs }) {
     const options = ref<OptionsItem[]>([]);
     const loading = ref(false);
     const isFirstLoad = ref(true);
-    const emitData = ref<any>(null);
     const attrs = computed(() => AllAttrs);
-    // Embedded in the form, just use the hook binding to perform form verification
-    const [state] = useRuleFormItem(props);
+    const state = computed({
+      get() {
+        return props.value;
+      },
+      set(val) {
+        emit("update:value", val);
+      },
+    });
 
     // Processing options value
     const getOptions = computed(() => {
@@ -103,10 +107,6 @@ export default defineComponent({
         }
         return prev;
       }, [] as OptionsItem[]);
-    });
-
-    watchEffect(() => {
-      props.immediate && fetch();
     });
 
     watch(
@@ -146,8 +146,12 @@ export default defineComponent({
 
     function handleChange(evt: Event) {
       // @ts-ignore
-      emitData.value = evt.target?.value;
+      emit("change", evt.target.value);
     }
+
+    onBeforeMount(() => {
+      props.immediate && fetch();
+    });
 
     return { state, getOptions, attrs, loading, handleChange, props };
   },

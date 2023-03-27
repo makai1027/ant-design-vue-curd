@@ -100,7 +100,6 @@ export function useFormValues({
    */
   function handleRangeTimeValue(values: Recordable) {
     const fieldMapToTime = unref(getProps).fieldMapToTime;
-
     if (!fieldMapToTime || !Array.isArray(fieldMapToTime)) {
       return values;
     }
@@ -145,8 +144,6 @@ export function useFormValues({
         if (_form[item.field] === undefined) {
           _form[item.field] = defaultValue;
         }
-      } else {
-        _form[item.field] === undefined;
       }
     });
     formModelStr.value = JSON.stringify(_form);

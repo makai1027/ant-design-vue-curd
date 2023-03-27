@@ -53,19 +53,24 @@ export default defineComponent({
       formProps: Ref<FormProps>;
     };
     const itemLabelWidthProp = useItemLabelWidth(schema, formProps);
-    const getValues = computed(() => {
-      const { allDefaultValues, formModel, schema } = props;
-      const { mergeDynamicData } = props.formProps;
-      return {
-        field: schema.field,
-        model: formModel,
-        values: {
-          ...mergeDynamicData,
-          ...allDefaultValues,
-          ...formModel,
-        } as Recordable,
-        schema: schema,
-      };
+    const getValues = computed({
+      get() {
+        const { allDefaultValues, formModel, schema } = props;
+        const { mergeDynamicData } = props.formProps;
+        return {
+          field: schema.field,
+          model: formModel,
+          values: {
+            ...mergeDynamicData,
+            ...allDefaultValues,
+            ...formModel,
+          } as Recordable,
+          schema: schema,
+        };
+      },
+      set(val) {
+        console.log(val, "内部修改");
+      },
     });
 
     const getComponentsProps = computed(() => {
@@ -245,7 +250,6 @@ export default defineComponent({
       } = props.schema;
 
       const isCheck = component && ["Switch", "Checkbox"].includes(component);
-
       const eventKey = `${lowerFirst(changeEvent)}`;
       const propEventKey = `on${upperFirst(changeEvent)}`;
       const on = {
@@ -345,15 +349,12 @@ export default defineComponent({
         props.schema;
       const { labelCol, wrapperCol } = unref(itemLabelWidthProp);
       const { colon } = props.formProps;
-
+      const scopedValues = toReactive({ ...getValues.value });
       if (component === "Divider") {
         return h(Col, { props: { span: 24 } }, [
-          h(
-            Divider,
-            { props: unref(getComponentsProps) },
-            // @ts-ignore
-            [renderLabelHelpMessage()]
-          ),
+          h(Divider, { props: unref(getComponentsProps) }, [
+            renderLabelHelpMessage(),
+          ]),
         ]);
       } else {
         const getContent = () => {
@@ -368,6 +369,15 @@ export default defineComponent({
         const getSuffix = isFunction(suffix)
           ? suffix(unref(getValues))
           : suffix;
+
+        watch(
+          () => scopedValues,
+          (val) => {
+            const { field, model } = val;
+            props.setFormModel(field, model[field]);
+          },
+          { deep: true }
+        );
         return h(
           Form.Item,
           {

@@ -1,5 +1,10 @@
 <template>
-  <RadioGroup v-bind="attrs" v-model="state" button-style="solid">
+  <RadioGroup
+    v-bind="attrs"
+    v-model="state"
+    button-style="solid"
+    @change="changeHandler"
+  >
     <template v-for="item in getOptions">
       <RadioButton
         :value="item.value"
@@ -15,7 +20,6 @@
 import { defineComponent, PropType, computed } from "vue";
 import { Radio } from "ant-design-vue";
 import { isString } from "@/utils/is";
-import { useRuleFormItem } from "@/hooks/component/useFormItem";
 
 type OptionsItem = {
   label: string;
@@ -39,9 +43,16 @@ export default defineComponent({
       default: () => [],
     },
   },
-  setup(props, { attrs }) {
-    // Embedded in the form, just use the hook binding to perform form verification
-    const [state] = useRuleFormItem(props);
+  emits: ["update:value", "change"],
+  setup(props, { attrs, emit }) {
+    const state = computed({
+      get() {
+        return props.value;
+      },
+      set(val) {
+        emit("update:value", val);
+      },
+    });
 
     // Processing options value
     const getOptions = computed((): OptionsItem[] => {
@@ -56,8 +67,12 @@ export default defineComponent({
         value: item,
       })) as OptionsItem[];
     });
+    const changeHandler = (evt: Event) => {
+      // @ts-ignore
+      emit("change", evt.target.value);
+    };
 
-    return { state, getOptions, attrs };
+    return { state, getOptions, attrs, changeHandler };
   },
 });
 </script>
