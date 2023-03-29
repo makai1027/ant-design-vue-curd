@@ -1,4 +1,4 @@
-import { ComputedRef, Ref } from "vue";
+import type { ComputedRef, Ref } from "vue";
 import type {
   FormProps,
   FormSchema,
@@ -21,7 +21,7 @@ import {
   defaultValueComponents,
 } from "../helper";
 import { dateUtil } from "@/utils/dateUtil";
-import { cloneDeep, uniqBy } from "lodash-es";
+import { cloneDeep } from "lodash-es";
 import { EmitType, Fn } from "#/index";
 
 interface UseFormActionContext {
@@ -70,7 +70,10 @@ export function useFormEvents({
   /**
    * @description: Set form value
    */
-  async function setFieldsValue(values: Recordable): Promise<void> {
+  async function setFieldsValue(
+    values: Recordable,
+    isInit = false
+  ): Promise<void> {
     const fields = unref(getSchema)
       .map((item) => item.field)
       .filter(Boolean);
@@ -133,7 +136,10 @@ export function useFormEvents({
       }
     });
     formModelStr.value = JSON.stringify(formModel);
-    validateFields(validKeys).catch((_) => {});
+    nextTick(() => {
+      if (isInit) return;
+      validateField(validKeys).catch((_) => {});
+    });
   }
   /**
    * @description: Delete based on field name
@@ -245,19 +251,19 @@ export function useFormEvents({
       );
     }
     const schema: FormSchema[] = [];
-    updateData.forEach((item) => {
-      unref(getSchema).forEach((val) => {
-        if (val.field === item.field) {
-          const newSchema = deepMerge(val, item);
-          schema.push(newSchema as FormSchema);
-        } else {
-          schema.push(val);
-        }
-      });
+    unref(getSchema).forEach((val) => {
+      const item = updateData.find((el) => val.field === el.field);
+      if (item) {
+        updateData = updateData.filter((el) => el.field !== item.field);
+        schema.push(deepMerge(val, item));
+      } else {
+        schema.push(val);
+      }
     });
     _setDefaultValue(schema);
-
-    schemaRef.value = uniqBy(schema, "field");
+    nextTick(() => {
+      schemaRef.value = schema;
+    });
   }
 
   function _setDefaultValue(data: FormSchema | FormSchema[]) {
@@ -300,12 +306,41 @@ export function useFormEvents({
     });
   }
 
-  async function validateFields(nameList?: NamePath[] | undefined) {
-    return unref(formElRef)?.validateFields(nameList);
+  async function validateField(nameList?: NamePath[] | undefined) {
+    return new Promise(async (resolve, reject) => {
+      if (nameList && nameList.length) {
+        const errorMsgArr: string[] = [];
+        // @ts-ignore
+        unref(formElRef)?.validateField(nameList, (errorMsg: string) => {
+          errorMsgArr.push(errorMsg);
+          if (errorMsgArr.length === nameList.length) {
+            if (errorMsgArr.some((el) => el)) {
+              reject(errorMsgArr);
+            } else {
+              resolve(JSON.parse(formModelStr.value));
+            }
+          }
+        });
+      } else {
+        const isValidate = await unref(formElRef)?.validate();
+        if (isValidate) {
+          resolve(JSON.parse(formModelStr.value));
+        } else {
+          reject(new Error("表单验证不通过"));
+        }
+      }
+    });
   }
 
-  async function validate() {
-    return await unref(formElRef)?.validate();
+  function validate() {
+    return new Promise(async (resolve, reject) => {
+      const isValidate = await unref(formElRef)?.validate();
+      if (isValidate) {
+        resolve(JSON.parse(formModelStr.value));
+      } else {
+        reject(new Error("表单验证不通过"));
+      }
+    });
   }
 
   async function clearValidate(name?: string | string[]) {
@@ -332,8 +367,7 @@ export function useFormEvents({
     const formEl = unref(formElRef);
     if (!formEl) return;
     try {
-      await validate();
-      const values = JSON.parse(formModelStr.value);
+      const values = await validate();
       const res = handleFormValues(values);
       emit("submit", res);
     } catch (error: any) {
@@ -345,7 +379,7 @@ export function useFormEvents({
     handleSubmit,
     clearValidate,
     validate,
-    validateFields,
+    validateField,
     getFieldsValue,
     updateSchema,
     resetSchema,

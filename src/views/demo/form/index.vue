@@ -667,15 +667,10 @@ export default defineComponent({
       mergeData.page = 2;
       basicform.value.updateSchema({
         field: "selectA",
-        component: "Select",
-        label: "互斥Se-------lectA",
-        slot: "selectA",
+        label: "互斥Se-lectA",
         defaultValue: [],
-        colProps: {
-          span: 8,
-        },
       });
-    }, 10000);
+    }, 5000);
     return {
       basicform,
       schemas,

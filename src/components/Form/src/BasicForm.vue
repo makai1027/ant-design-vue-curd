@@ -6,7 +6,7 @@
     :model.sync="formModel"
     @keydown.native="handleEnterPress"
   >
-    <Row v-bind="getRow">
+    <Row class="form-row" v-bind="getRow">
       <slot name="formHeader"></slot>
       <template v-for="schema in getSchema">
         <FormItem
@@ -160,15 +160,7 @@ export default defineComponent({
           }
         }
       }
-      if (unref(getProps).showAdvancedButton) {
-        return cloneDeep(
-          schemas.filter(
-            (schema) => schema.component !== "Divider"
-          ) as FormSchema[]
-        );
-      } else {
-        return cloneDeep(schemas as FormSchema[]);
-      }
+      return cloneDeep(schemas as FormSchema[]);
     });
 
     const { handleToggleAdvanced, fieldsIsAdvancedMap } = useAdvanced({
@@ -200,7 +192,7 @@ export default defineComponent({
       setFieldsValue,
       clearValidate,
       validate,
-      validateFields,
+      validateField,
       getFieldsValue,
       updateSchema,
       resetSchema,
@@ -230,7 +222,7 @@ export default defineComponent({
       () => {
         const { model } = unref(getProps);
         if (!model) return;
-        setFieldsValue(model);
+        setFieldsValue(model, true);
       },
       {
         immediate: true,
@@ -247,6 +239,7 @@ export default defineComponent({
     watch(
       () => getSchema.value,
       (schema) => {
+        console.log(schema, "????????????");
         nextTick(() => {
           //  Solve the problem of modal adaptive height calculation when the form is placed in the modal
           // modalFn?.redoModalHeight?.();
@@ -281,7 +274,7 @@ export default defineComponent({
       formModelStr.value = JSON.stringify(_form);
       const { validateTrigger } = unref(getBindValue);
       if (!validateTrigger || validateTrigger === "change") {
-        validateFields([key]).catch((_) => {});
+        validateField([key]).catch((_) => {});
       }
       emit("field-value-change", key, value);
     }
@@ -311,7 +304,7 @@ export default defineComponent({
       removeSchemaByField,
       appendSchemaByField,
       clearValidate,
-      validateFields,
+      validateField,
       validate,
       submit: handleSubmit,
       scrollToField: scrollToField,
@@ -350,6 +343,10 @@ export default defineComponent({
 @prefix-cls: ~"@{namespace}-basic-form";
 
 .@{prefix-cls} {
+  .form-row {
+    display: flex;
+    flex-flow: wrap;
+  }
   .ant-form-item {
     display: flex;
     flex-flow: row wrap;

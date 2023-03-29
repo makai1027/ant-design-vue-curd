@@ -7,9 +7,7 @@
     @change="handleChange"
     :displayRender="handleRenderDisplay"
   >
-    <template #suffixIcon v-if="loading">
-      <a-icon type="loading" />
-    </template>
+    <a-icon v-if="loading" slot="suffixIcon" type="loading" />
   </a-cascader>
 </template>
 <script lang="ts">
@@ -20,12 +18,12 @@ import {
   unref,
   watch,
   onBeforeMount,
+  computed,
 } from "vue";
 import { Cascader, Icon } from "ant-design-vue";
 import propTypes from "ant-design-vue/es/_util/vue-types/index";
 import { isFunction } from "@/utils/is";
 import { get, omit, set } from "lodash-es";
-import { useRuleFormItem } from "@/hooks/component/useFormItem";
 
 interface Option {
   value: string;
@@ -43,6 +41,7 @@ export default defineComponent({
   props: {
     value: {
       type: Array,
+      default: () => [],
     },
     api: {
       type: Function as PropType<(arg?: Recordable) => Promise<Option[]>>,
@@ -76,9 +75,15 @@ export default defineComponent({
     const loading = ref<boolean>(false);
     const emitData = ref<any[]>([]);
     const isFirstLoad = ref(true);
-    // Embedded in the form, just use the hook binding to perform form verification
-    const [state] = useRuleFormItem(props, "value", "change", emitData);
-
+    const state = computed({
+      get() {
+        return props.value;
+      },
+      set(val) {
+        emit("update:value", val);
+        emit("change", val);
+      },
+    });
     watch(
       apiData,
       (data) => {
@@ -119,11 +124,18 @@ export default defineComponent({
       try {
         const res = await api(props.initFetchParams);
         if (Array.isArray(res)) {
-          apiData.value = res;
+          apiData.value = res.map((el) => {
+            el.loading = false;
+            return el;
+          });
           return;
         }
         if (props.resultField) {
           apiData.value = get(res, props.resultField) || [];
+          apiData.value.map((el) => {
+            el.loading = false;
+            return el;
+          });
         }
       } catch (error) {
         console.warn(error);
@@ -146,13 +158,19 @@ export default defineComponent({
 
         if (Array.isArray(res)) {
           const children = generatorOptions(res);
-          targetOption.children = children;
+          targetOption.children = children.map((el) => {
+            el.loading = false;
+            return toReactive(el);
+          });
           return;
         }
 
         if (props.resultField) {
           const children = generatorOptions(get(res, props.resultField) || []);
-          targetOption.children = children;
+          targetOption.children = children.map((el) => {
+            el.loading = false;
+            return toReactive(el);
+          });
         }
       } catch (e) {
         console.error(e);
@@ -167,13 +185,6 @@ export default defineComponent({
         !unref(isFirstLoad) && initialFetch();
       },
       { deep: true }
-    );
-
-    watch(
-      () => state.value,
-      (v) => {
-        emit("update:value", v);
-      }
     );
 
     function handleChange(keys: any, args: any) {

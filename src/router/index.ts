@@ -24,22 +24,22 @@ export const BasicRoute = [
           title: "基础表单",
         },
       },
-      // {
-      //   path: "/form/useForm",
-      //   name: "UseFormDemo",
-      //   component: () => import("@/views/demo/form/UseForm.vue"),
-      //   meta: {
-      //     title: "useForm",
-      //   },
-      // },
-      // {
-      //   path: "/form/refForm",
-      //   name: "RefFormDemo",
-      //   component: () => import("@/views/demo/form/RefForm.vue"),
-      //   meta: {
-      //     title: "refForm",
-      //   },
-      // },
+      {
+        path: "/form/useForm",
+        name: "UseFormDemo",
+        component: () => import("@/views/demo/form/UseForm.vue"),
+        meta: {
+          title: "useForm",
+        },
+      },
+      {
+        path: "/form/refForm",
+        name: "RefFormDemo",
+        component: () => import("@/views/demo/form/RefForm.vue"),
+        meta: {
+          title: "refForm",
+        },
+      },
       {
         path: "/form/advancedForm",
         name: "AdvancedFormDemo",
@@ -48,46 +48,46 @@ export const BasicRoute = [
           title: "可收缩表单",
         },
       },
-      // {
-      //   path: "/form/ruleForm",
-      //   name: "RuleFormDemo",
-      //   component: () => import("@/views/demo/form/RuleForm.vue"),
-      //   meta: {
-      //     title: "表单验证",
-      //   },
-      // },
-      // {
-      //   path: "/form/dynamicForm",
-      //   name: "DynamicFormDemo",
-      //   component: () => import("@/views/demo/form/DynamicForm.vue"),
-      //   meta: {
-      //     title: "动态表单",
-      //   },
-      // },
-      // {
-      //   path: "/form/customerForm",
-      //   name: "CustomerFormDemo",
-      //   component: () => import("@/views/demo/form/CustomerForm.vue"),
-      //   meta: {
-      //     title: "自定义组件",
-      //   },
-      // },
-      // {
-      //   path: "/form/appendForm",
-      //   name: "appendFormDemo",
-      //   component: () => import("@/views/demo/form/AppendForm.vue"),
-      //   meta: {
-      //     title: "表单增删示例",
-      //   },
-      // },
-      // {
-      //   path: "/form/tabsForm",
-      //   name: "tabsFormDemo",
-      //   component: () => import("@/views/demo/form/TabsForm.vue"),
-      //   meta: {
-      //     title: "标签页和多节field",
-      //   },
-      // },
+      {
+        path: "/form/ruleForm",
+        name: "RuleFormDemo",
+        component: () => import("@/views/demo/form/RuleForm.vue"),
+        meta: {
+          title: "表单验证",
+        },
+      },
+      {
+        path: "/form/dynamicForm",
+        name: "DynamicFormDemo",
+        component: () => import("@/views/demo/form/DynamicForm.vue"),
+        meta: {
+          title: "动态表单",
+        },
+      },
+      {
+        path: "/form/customerForm",
+        name: "CustomerFormDemo",
+        component: () => import("@/views/demo/form/CustomerForm.vue"),
+        meta: {
+          title: "自定义组件",
+        },
+      },
+      {
+        path: "/form/appendForm",
+        name: "appendFormDemo",
+        component: () => import("@/views/demo/form/AppendForm.vue"),
+        meta: {
+          title: "表单增删示例",
+        },
+      },
+      {
+        path: "/form/tabsForm",
+        name: "tabsFormDemo",
+        component: () => import("@/views/demo/form/TabsForm.vue"),
+        meta: {
+          title: "标签页和多节field",
+        },
+      },
     ],
   },
   // {

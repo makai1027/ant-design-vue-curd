@@ -21,7 +21,7 @@ export const basicProps = {
     type: Array as PropType<FieldMapToTime>,
     default: () => [],
   },
-  compact: propTypes.bool,
+  compact: propTypes.bool.def(false),
   // 表单配置规则
   schemas: {
     type: [Array] as PropType<FormSchema[]>,
@@ -40,17 +40,18 @@ export const basicProps = {
   autoSetPlaceHolder: propTypes.bool.def(true),
   // 在INPUT组件上单击回车时，是否自动提交
   autoSubmitOnEnter: propTypes.bool.def(false),
-  submitOnReset: propTypes.bool,
-  submitOnChange: propTypes.bool,
+  submitOnReset: propTypes.bool.def(false),
+  submitOnChange: propTypes.bool.def(false),
   size: propTypes.oneOf(["default", "small", "large"]).def("default"),
   // 禁用表单
-  disabled: propTypes.bool,
+  disabled: propTypes.bool.def(false),
   emptySpan: {
     type: [Number, Object] as PropType<number>,
     default: 0,
   },
   // 是否显示收起展开按钮
-  showAdvancedButton: propTypes.bool,
+  // 是否显示收起展开按钮
+  showAdvancedButton: propTypes.bool.def(false),
   // 转化时间
   transformDateFunc: {
     type: Function as PropType<Fn>,
@@ -71,7 +72,7 @@ export const basicProps = {
   // 显示重置按钮
   showResetButton: propTypes.bool.def(true),
   // 是否聚焦第一个输入框，只在第一个表单项为input的时候作用
-  autoFocusFirstItem: propTypes.bool,
+  autoFocusFirstItem: propTypes.bool.def(false),
   // 重置按钮配置
   resetButtonOptions: Object as PropType<Partial<ButtonProps>>,
 
@@ -85,7 +86,7 @@ export const basicProps = {
   submitFunc: Function as PropType<() => Promise<void>>,
 
   // 以下为默认props
-  hideRequiredMark: propTypes.bool,
+  hideRequiredMark: propTypes.bool.def(false),
 
   labelCol: Object as PropType<Partial<ColEx>>,
 
@@ -98,7 +99,7 @@ export const basicProps = {
 
   wrapperCol: Object as PropType<Partial<ColEx>>,
 
-  colon: propTypes.bool,
+  colon: propTypes.bool.def(true),
 
   labelAlign: propTypes.string,
 

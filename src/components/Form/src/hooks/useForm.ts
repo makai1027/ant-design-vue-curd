@@ -9,7 +9,7 @@ import type { DynamicProps } from "#/utils";
 import { ref, onUnmounted, unref, nextTick, watch } from "vue";
 import { getDynamicProps } from "@/utils";
 const isProdMode = () => import.meta.env.MODE === "production";
-export declare type ValidateFields = (
+export declare type validateField = (
   nameList?: NamePath[]
 ) => Promise<Recordable>;
 
@@ -120,9 +120,9 @@ export function useForm(props?: Props): UseFormReturnType {
       return form.validate(nameList);
     },
 
-    validateFields: async (nameList?: NamePath[]): Promise<Recordable> => {
+    validateField: async (nameList?: NamePath[]): Promise<Recordable> => {
       const form = await getForm();
-      return form.validateFields(nameList);
+      return form.validateField(nameList);
     },
   };
 

@@ -94,26 +94,26 @@ const getSchamas = (): FormSchema[] => {
         ],
       },
     },
-    // {
-    //   field: 'field7',
-    //   component: 'RadioGroup',
-    //   label: '字段7',
-    //   colProps: {
-    //     span: 8,
-    //   },
-    //   componentProps: {
-    //     options: [
-    //       {
-    //         label: '选项1',
-    //         value: '1',
-    //       },
-    //       {
-    //         label: '选项2',
-    //         value: '2',
-    //       },
-    //     ],
-    //   },
-    // },
+    {
+      field: "field7",
+      component: "RadioGroup",
+      label: "字段7",
+      colProps: {
+        span: 8,
+      },
+      componentProps: {
+        options: [
+          {
+            label: "选项1",
+            value: "1",
+          },
+          {
+            label: "选项2",
+            value: "2",
+          },
+        ],
+      },
+    },
   ];
 };
 
@@ -181,14 +181,22 @@ export default defineComponent({
       schemas: [
         ...getSchamas(),
         ...getAppendSchemas(),
-        { field: "", component: "Divider", label: "更多字段" },
+        {
+          field: "divider-api-select",
+          component: "Divider",
+          label: "远程下拉演示",
+          colProps: {
+            span: 24,
+          },
+        },
         ...extraSchemas,
       ],
       actionColOptions: {
         span: 24,
       },
-      compact: true,
       showAdvancedButton: true,
+      compact: true,
+
       alwaysShowLines: 2,
     });
     return {

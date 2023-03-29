@@ -46,7 +46,7 @@ export interface FormActionType {
     prefixField: string | undefined,
     first?: boolean | undefined
   ) => Promise<void>;
-  validateFields: (nameList?: NamePath[]) => Promise<any>;
+  validateField: (nameList?: NamePath[]) => Promise<any>;
   validate: (nameList?: NamePath[]) => Promise<any>;
   scrollToField: (name: NamePath, options?: ScrollOptions) => Promise<void>;
 }

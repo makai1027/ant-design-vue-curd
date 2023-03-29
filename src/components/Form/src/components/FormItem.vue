@@ -53,24 +53,19 @@ export default defineComponent({
       formProps: Ref<FormProps>;
     };
     const itemLabelWidthProp = useItemLabelWidth(schema, formProps);
-    const getValues = computed({
-      get() {
-        const { allDefaultValues, formModel, schema } = props;
-        const { mergeDynamicData } = props.formProps;
-        return {
-          field: schema.field,
-          model: formModel,
-          values: {
-            ...mergeDynamicData,
-            ...allDefaultValues,
-            ...formModel,
-          } as Recordable,
-          schema: schema,
-        };
-      },
-      set(val) {
-        console.log(val, "内部修改");
-      },
+    const getValues = computed(() => {
+      const { allDefaultValues, formModel, schema } = props;
+      const { mergeDynamicData } = props.formProps;
+      return {
+        field: schema.field,
+        model: formModel,
+        values: {
+          ...mergeDynamicData,
+          ...allDefaultValues,
+          ...formModel,
+        } as Recordable,
+        schema: schema,
+      };
     });
 
     const getComponentsProps = computed(() => {
@@ -78,8 +73,12 @@ export default defineComponent({
       let { componentProps = {} } = schema;
       if (isFunction(componentProps)) {
         componentProps =
-          componentProps({ schema, tableAction, formModel, formActionType }) ??
-          {};
+          componentProps({
+            schema,
+            tableAction,
+            formModel: toReactive(formModel),
+            formActionType,
+          }) ?? {};
       }
       if (schema.component === "Divider") {
         componentProps = Object.assign({ type: "horizontal" }, componentProps, {
@@ -331,6 +330,7 @@ export default defineComponent({
       ) {
         return renderLabel;
       }
+
       return h("span", {}, [
         renderLabel,
         h(BasicHelp, {
@@ -349,19 +349,18 @@ export default defineComponent({
         props.schema;
       const { labelCol, wrapperCol } = unref(itemLabelWidthProp);
       const { colon } = props.formProps;
+      // ；利用浅拷贝
       const scopedValues = toReactive({ ...getValues.value });
       if (component === "Divider") {
-        return h(Col, { props: { span: 24 } }, [
-          h(Divider, { props: unref(getComponentsProps) }, [
-            renderLabelHelpMessage(),
-          ]),
+        return h(Divider, { props: unref(getComponentsProps) }, [
+          renderLabelHelpMessage(),
         ]);
       } else {
         const getContent = () => {
           return slot
             ? getSlot(slots, slot, unref(getValues))
             : render
-            ? render(unref(getValues))
+            ? render(scopedValues)
             : renderComponent();
         };
 

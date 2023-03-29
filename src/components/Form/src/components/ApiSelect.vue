@@ -32,7 +32,6 @@ import {
 } from "vue";
 import { Select, Icon } from "ant-design-vue";
 import { isFunction } from "@/utils/is";
-import { useRuleFormItem } from "@/hooks/component/useFormItem";
 import { get, omit } from "lodash-es";
 
 import propTypes from "ant-design-vue/es/_util/vue-types/index";

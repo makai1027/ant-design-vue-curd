@@ -4,18 +4,10 @@
   </Button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { Button } from "ant-design-vue";
-export default defineComponent({
-  name: "AButton",
-  extends: Button,
-});
-</script>
 <script lang="ts" setup>
 import { computed, unref, useAttrs } from "vue";
 import { buttonProps } from "./props";
-
+import { Button } from "ant-design-vue";
 const props = defineProps(buttonProps);
 // get component class
 const attrs = useAttrs();

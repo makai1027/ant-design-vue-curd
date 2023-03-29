@@ -10,7 +10,7 @@
           type="default"
           class="mr-2"
           v-bind="getResetBtnOptions"
-          @click.native="resetAction"
+          @click="resetAction"
           v-if="showResetButton"
         >
           {{ getResetBtnOptions.text }}
@@ -21,7 +21,7 @@
           type="primary"
           class="mr-2"
           v-bind="getSubmitBtnOptions"
-          @click.native="submitAction"
+          @click="submitAction"
           v-if="showSubmitButton"
         >
           {{ getSubmitBtnOptions.text }}
@@ -31,7 +31,7 @@
         <Button
           type="link"
           size="small"
-          @click.native="toggleAdvanced"
+          @click="toggleAdvanced"
           v-if="showAdvancedButton && !hideAdvanceBtn"
         >
           {{ isAdvanced ? "收起" : "展开" }}
@@ -44,13 +44,11 @@
 </template>
 <script lang="ts">
 import type { ColEx } from "../types/index";
-//import type { ButtonProps } from 'ant-design-vue/es/button/buttonTypes';
 import { defineComponent, computed, PropType } from "vue";
-import { FormModel as Form, Col } from "ant-design-vue";
-import { Button, ButtonProps } from "@/components/Button";
+import { FormModel as Form, Col, Button } from "ant-design-vue";
+import { ButtonProps } from "@/components/Button";
 import { BasicArrow } from "@/components/Basic";
 import { useFormContext } from "../hooks/useFormContext";
-
 import propTypes from "ant-design-vue/es/_util/vue-types/index";
 
 type ButtonOptions = Partial<ButtonProps> & { text: string };
