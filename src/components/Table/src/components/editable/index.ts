@@ -1,5 +1,5 @@
 import type { BasicColumn } from "@/components/Table/src/types/table";
-
+import { Fn } from "#/index";
 import { h, Ref } from "vue";
 
 import EditableCell from "./EditableCell.vue";
@@ -45,10 +45,12 @@ export function renderEditCell(column: BasicColumn) {
     };
 
     return h(EditableCell, {
-      value,
-      record,
-      column,
-      index,
+      props: {
+        value,
+        record,
+        column,
+        index,
+      },
     });
   };
 }

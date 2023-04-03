@@ -1,12 +1,11 @@
-import { VNodeChild } from 'vue';
-
+import { VNodeChild } from "#/index";
 export interface ColumnFilterItem {
   text?: string;
   value?: string;
   children?: any;
 }
 
-export declare type SortOrder = 'ascend' | 'descend';
+export declare type SortOrder = "ascend" | "descend";
 
 export interface RecordProps<T> {
   text: any;
@@ -25,7 +24,9 @@ export interface FilterDropdownProps {
   visible?: boolean;
 }
 
-export declare type CustomRenderFunction<T> = (record: RecordProps<T>) => VNodeChild | JSX.Element;
+export declare type CustomRenderFunction<T> = (
+  record: RecordProps<T>
+) => VNodeChild | JSX.Element;
 
 export interface ColumnProps<T> {
   /**
@@ -33,7 +34,7 @@ export interface ColumnProps<T> {
    * @default 'left'
    * @type string
    */
-  align?: 'left' | 'right' | 'center';
+  align?: "left" | "right" | "center";
 
   /**
    * ellipsize cell content, not working with sorter and filters for now.
@@ -120,7 +121,7 @@ export interface ColumnProps<T> {
    * @default false
    * @type boolean | string
    */
-  fixed?: boolean | 'left' | 'right';
+  fixed?: boolean | "left" | "right";
 
   /**
    * Unique key of this column, you can ignore this prop if you've set a unique dataIndex

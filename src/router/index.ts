@@ -90,6 +90,58 @@ export const BasicRoute = [
       },
     ],
   },
+
+  {
+    path: "/modal",
+    name: "ModalDemo",
+    component: () => import("@/views/blank.vue"),
+    redirect: "",
+    meta: {
+      title: "弹窗组件",
+    },
+    children: [
+      {
+        path: "/modal/base",
+        name: "ModalDemobase",
+        component: () => import("@/views/demo/modal/index.vue"),
+        meta: {
+          title: "弹窗组件示例集合",
+        },
+      },
+      {
+        path: "/modal/modal1",
+        name: "ModalDemo1",
+        component: () => import("@/views/demo/modal/Modal1.vue"),
+        meta: {
+          title: "弹窗组件1",
+        },
+      },
+      {
+        path: "/modal/modal2",
+        name: "ModalDemo2",
+        component: () => import("@/views/demo/modal/Modal2.vue"),
+        meta: {
+          title: "弹窗组件2",
+        },
+      },
+      {
+        path: "/modal/modal3",
+        name: "ModalDemo3",
+        component: () => import("@/views/demo/modal/Modal3.vue"),
+        meta: {
+          title: "弹窗组件3",
+        },
+      },
+      {
+        path: "/modal/modal4",
+        name: "ModalDemo4",
+        component: () => import("@/views/demo/modal/Modal4.vue"),
+        meta: {
+          title: "弹窗组件4",
+        },
+      },
+    ],
+  },
   // {
   //   path: "/table",
   //   name: "TableDemo",

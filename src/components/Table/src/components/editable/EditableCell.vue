@@ -1,5 +1,5 @@
 <script lang="tsx">
-import type { CSSProperties, PropType } from "vue";
+import type { PropType } from "vue";
 import {
   computed,
   defineComponent,
@@ -11,36 +11,22 @@ import {
 } from "vue";
 import type { BasicColumn } from "../../types/table";
 import type { EditRecordRow } from "./index";
-import {
-  CheckOutlined,
-  CloseOutlined,
-  FormOutlined,
-} from "@ant-design/icons-vue";
 import { CellComponent } from "./CellComponent";
-
-import { useDesign } from "@/hooks/web/useDesign";
+import { useDesign } from "@/utils";
 import { useTableContext } from "../../hooks/useTableContext";
-
-import clickOutside from "@/directives/clickOutside";
-
-import { propTypes } from "@/utils/propTypes";
+import propTypes from "ant-design-vue/es/_util/vue-types/index";
 import { isArray, isBoolean, isFunction, isNumber, isString } from "@/utils/is";
 import { createPlaceholderMessage } from "./helper";
 import { pick, set } from "lodash-es";
 import { treeToList } from "@/utils/helper/treeHelper";
-import { Spin } from "ant-design-vue";
-
+import { Spin, Icon } from "ant-design-vue";
+import { LabelValueOptions } from "#/index";
 export default defineComponent({
   name: "EditableCell",
   components: {
-    FormOutlined,
-    CloseOutlined,
-    CheckOutlined,
+    Icon,
     CellComponent,
     Spin,
-  },
-  directives: {
-    clickOutside,
   },
   props: {
     value: {
@@ -157,7 +143,7 @@ export default defineComponent({
       return option?.label ?? value;
     });
 
-    const getWrapperStyle = computed((): CSSProperties => {
+    const getWrapperStyle = computed((): Recordable => {
       if (unref(getIsCheckComp) || unref(getRowEditable)) {
         return {};
       }
@@ -446,7 +432,7 @@ export default defineComponent({
               : "\u00A0"}
           </div>
           {!this.column.editRow && (
-            <FormOutlined class={`${this.prefixCls}__normal-icon`} />
+            <Icon type="form" class={`${this.prefixCls}__normal-icon`} />
           )}
         </div>
         {this.isEdit && (
@@ -470,11 +456,13 @@ export default defineComponent({
               />
               {!this.getRowEditable && (
                 <div class={`${this.prefixCls}__action`}>
-                  <CheckOutlined
+                  <Icon
+                    type="check-circle"
                     class={[`${this.prefixCls}__icon`, "mx-2"]}
                     onClick={this.handleSubmitClick}
                   />
-                  <CloseOutlined
+                  <Icon
+                    type="close-circle"
                     class={`${this.prefixCls}__icon `}
                     onClick={this.handleCancel}
                   />

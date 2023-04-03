@@ -27,6 +27,8 @@ export default ({ command }: ConfigEnv): UserConfig => {
       preprocessorOptions: {
         less: {
           modifyVars: {
+            "error-color": "#ED6F6F",
+            "text-color-help-dark": "#909399",
             namespace: "curd-tool",
             "primary-color": "#1890ff",
             "text-color": "#c9d1d9",

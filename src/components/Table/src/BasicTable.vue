@@ -49,18 +49,9 @@ import type {
   ColumnChangeParam,
 } from "./types/table";
 
-import {
-  defineComponent,
-  ref,
-  computed,
-  unref,
-  toRaw,
-  inject,
-  watchEffect,
-} from "vue";
+import { defineComponent, ref, computed, unref, toRaw } from "vue";
 import { Table } from "ant-design-vue";
 import { BasicForm, useForm } from "@/components/Form/index";
-import { PageWrapperFixedHeightKey } from "@/components/Page";
 import HeaderCell from "./components/HeaderCell.vue";
 import { InnerHandlers } from "./types/table";
 
@@ -78,12 +69,11 @@ import { useTableExpand } from "./hooks/useTableExpand";
 import { createTableContext } from "./hooks/useTableContext";
 import { useTableFooter } from "./hooks/useTableFooter";
 import { useTableForm } from "./hooks/useTableForm";
-import { useDesign } from "@/hooks/web/useDesign";
+import { useDesign } from "@/utils/index";
 
 import { omit } from "lodash-es";
 import { basicProps } from "./props";
 import { isFunction } from "@/utils/is";
-import { warn } from "@/utils/log";
 
 export default defineComponent({
   components: {
@@ -123,15 +113,6 @@ export default defineComponent({
 
     const getProps = computed(() => {
       return { ...props, ...unref(innerPropsRef) } as BasicTableProps;
-    });
-
-    const isFixedHeightPage = inject(PageWrapperFixedHeightKey, false);
-    watchEffect(() => {
-      unref(isFixedHeightPage) &&
-        props.canResize &&
-        warn(
-          "'canResize' of BasicTable may not work in PageWrapper with 'fixedHeight' (especially in hot updates)"
-        );
     });
 
     const { getLoading, setLoading } = useLoading(getProps);
@@ -182,7 +163,7 @@ export default defineComponent({
       emit
     );
 
-    function handleTableChange(...args) {
+    function handleTableChange(...args: any) {
       onTableChange.call(undefined, ...args);
       emit("change", ...args);
       // 解决通过useTable注册onChange时不起作用的问题

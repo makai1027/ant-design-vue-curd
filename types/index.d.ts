@@ -1,3 +1,4 @@
+import type { VNode } from "vue";
 declare interface Fn<T = any, R = T> {
   (...arg: T[]): R;
 }
@@ -27,6 +28,18 @@ declare type ComponentRef<T extends HTMLElement = HTMLDivElement> =
 
 declare type ElRef<T extends HTMLElement = HTMLDivElement> = Nullable<T>;
 
-export declare type Slot = (...args: any[]) => VNode[];
+declare type Slot = (...args: any[]) => VNode[];
 
-export declare type Slots = Readonly<InternalSlots>;
+declare type Slots = Readonly<InternalSlots>;
+
+declare type VNodeArrayChildren = Array<VNodeArrayChildren | VNodeChildAtom>;
+declare type VNodeChild = VNodeChildAtom | VNodeArrayChildren;
+
+declare type VNodeChildAtom =
+  | VNode
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | void;

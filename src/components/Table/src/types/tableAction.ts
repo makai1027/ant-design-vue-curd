@@ -1,19 +1,21 @@
-import { ButtonProps } from "ant-design-vue/es/button/buttonTypes";
-import { TooltipProps } from "ant-design-vue/es/tooltip/Tooltip";
+import { Button } from "ant-design-vue/types/button/button";
+import { Tooltip } from "ant-design-vue/types/tootip/tooltip";
 import { RoleEnum } from "@/enums/roleEnum";
-export interface ActionItem extends ButtonProps {
+
+import { Fn } from "#/index";
+export interface ActionItem extends Button {
   onClick?: Fn;
   label?: string;
   color?: "success" | "error" | "warning";
-  icon?: string;
+  icon: string;
   popConfirm?: PopConfirm;
-  disabled?: boolean;
-  divider?: boolean;
+  disabled: boolean;
+  divider: boolean;
   // 权限编码控制是否显示
   auth?: RoleEnum | RoleEnum[] | string | string[];
   // 业务控制是否显示
   ifShow?: boolean | ((action: ActionItem) => boolean);
-  tooltip?: string | TooltipProps;
+  tooltip?: string | Tooltip;
 }
 
 export interface PopConfirm {
