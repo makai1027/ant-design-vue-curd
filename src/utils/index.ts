@@ -1,7 +1,7 @@
 import type { PluginFunction } from "vue";
 import Vue, { unref } from "vue";
 import { isObject } from "@/utils/is";
-import { cloneDeep } from "lodash-es";
+import cloneDeep from "lodash-es/cloneDeep";
 
 export const withInstall = <T>(component: T, alias?: string) => {
   const comp = component as any;

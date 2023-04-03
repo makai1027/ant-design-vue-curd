@@ -10,7 +10,7 @@ import {
   toRaw,
 } from "vue";
 
-import { isEqual } from "lodash-es";
+import isEqual from "lodash-es/isEqual";
 
 export function useRuleFormItem<
   T extends Recordable,

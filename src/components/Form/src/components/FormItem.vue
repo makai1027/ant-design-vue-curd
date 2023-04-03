@@ -10,9 +10,11 @@ import { BasicHelp } from "@/components/Basic";
 import { isBoolean, isFunction, isNull } from "@/utils/is";
 import { getSlot } from "@/utils/tsxHelper";
 import { createPlaceholderMessage, setComponentRuleType } from "../helper";
-import { cloneDeep, lowerFirst, upperFirst } from "lodash-es";
 import { useItemLabelWidth } from "../hooks/useLabelWidth";
-import { has } from "lodash-es";
+import cloneDeep from "lodash-es/cloneDeep";
+import lowerFirst from "lodash-es/lowerFirst";
+import upperFirst from "lodash-es/upperFirst";
+import has from "lodash-es/has";
 
 export default defineComponent({
   name: "BasicFormItem",

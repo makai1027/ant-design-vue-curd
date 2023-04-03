@@ -74,7 +74,7 @@ import { useAutoFocus } from "./hooks/useAutoFocus";
 // import { useModalContext } from "@/components/Modal";
 import { useDebounceFn } from "@vueuse/core";
 import { basicProps } from "./props";
-import { cloneDeep } from "lodash-es";
+import cloneDeep from "lodash-es/cloneDeep";
 
 export default defineComponent({
   name: "BasicForm",

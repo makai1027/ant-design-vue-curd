@@ -67,7 +67,7 @@ import { optionsListApi } from "@/api/demo/select";
 import { useDebounceFn } from "@vueuse/core";
 import { treeOptionsListApi } from "@/api/demo/tree";
 import { Select, Card, message } from "ant-design-vue";
-import { cloneDeep } from "lodash-es";
+import cloneDeep from "lodash-es/cloneDeep";
 
 const valueSelectA = ref<string[]>([]);
 const valueSelectB = ref<string[]>([]);

@@ -13,7 +13,7 @@
 import { computed, defineComponent, watch, ref, onMounted, unref } from "vue";
 import { TreeSelect, Icon } from "ant-design-vue";
 import { isArray, isFunction } from "@/utils/is";
-import { get } from "lodash-es";
+import get from "lodash-es/get";
 import propTypes from "ant-design-vue/es/_util/vue-types/index";
 
 export default defineComponent({

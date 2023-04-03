@@ -21,7 +21,7 @@ import {
   defaultValueComponents,
 } from "../helper";
 import { dateUtil } from "@/utils/dateUtil";
-import { cloneDeep } from "lodash-es";
+import cloneDeep from "lodash-es/cloneDeep";
 import { EmitType, Fn } from "#/index";
 
 interface UseFormActionContext {

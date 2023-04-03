@@ -27,7 +27,7 @@
 <script lang="ts">
 import { ref, defineComponent } from "vue";
 import { Tabs, Card, Button, message } from "ant-design-vue";
-import { omit, merge } from "lodash-es";
+import omit from "lodash-es/omit";
 import {
   BasicForm,
   FormSchema,
@@ -112,7 +112,7 @@ export default defineComponent({
           const { validate, getFieldsValue } = item.Form[1];
           await validate();
           // 表单已支持多级key
-          merge(values, getFieldsValue());
+          Object.assign(values, getFieldsValue());
 
           console.log(getFieldsValue(), "------", values);
         }

@@ -23,7 +23,9 @@ import {
 import { Cascader, Icon } from "ant-design-vue";
 import propTypes from "ant-design-vue/es/_util/vue-types/index";
 import { isFunction } from "@/utils/is";
-import { get, omit, set } from "lodash-es";
+import get from "lodash-es/get";
+import omit from "lodash-es/omit";
+import set from "lodash-es/set";
 
 interface Option {
   value: string;

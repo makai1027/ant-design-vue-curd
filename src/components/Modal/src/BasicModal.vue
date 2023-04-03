@@ -65,7 +65,6 @@ import {
   unref,
   watchEffect,
   toRef,
-  getCurrentInstance,
   nextTick,
 } from "vue";
 import Modal from "./components/Modal.vue";
@@ -77,7 +76,7 @@ import { isFunction } from "@/utils/is";
 import { deepMerge, useDesign } from "@/utils";
 import { basicProps } from "./props";
 import { useFullScreen } from "./hooks/useModalFullScreen";
-import { omit } from "lodash-es";
+import omit from "lodash-es/omit";
 
 export default defineComponent({
   name: "BasicModal",

@@ -11,7 +11,8 @@ import { renderEditCell } from "../components/editable";
 import { usePermission } from "@/hooks/web/usePermission";
 import { useI18n } from "@/hooks/web/useI18n";
 import { isArray, isBoolean, isFunction, isMap, isString } from "@/utils/is";
-import { cloneDeep, isEqual } from "lodash-es";
+import cloneDeep from "lodash-es/cloneDeep";
+import isEqual from "lodash-es/isEqual";
 import { formatToDate } from "@/utils/dateUtil";
 import {
   ACTION_COLUMN_FLAG,

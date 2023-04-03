@@ -1,5 +1,4 @@
 import path from "path";
-import { defineConfig } from "vite";
 import type { UserConfig, ConfigEnv } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import vue2Jsx from "@vitejs/plugin-vue2-jsx";
@@ -75,7 +74,7 @@ export default ({ command }: ConfigEnv): UserConfig => {
         },
       },
       lib: {
-        entry: path.resolve(__dirname, "./src/components/Form/index.ts"),
+        entry: path.resolve(__dirname, "./src/components/Modal/index.ts"),
         name: "lib",
         // formats: ['es', 'cjs', 'umd', 'iife'],
         fileName: (format) => `lib.${format}.js`,
@@ -85,12 +84,6 @@ export default ({ command }: ConfigEnv): UserConfig => {
       vue(),
       vue2Jsx(),
       WindiCSS(),
-      // isBuild && visualizer({
-      //   filename: "./stats.html",
-      //   open: true,
-      //   gzipSize: true,
-      //   brotliSize: true,
-      // }),
       viteMockServe({
         ignore: /^\_/,
         mockPath: "./mock",
@@ -114,13 +107,22 @@ export default ({ command }: ConfigEnv): UserConfig => {
         imports: ["@vueuse/core"],
         dts: "types/auto-imports.d.ts",
       }),
+      isBuild &&
+        visualizer({
+          filename: "./stats.html",
+          open: true,
+          gzipSize: true,
+          brotliSize: true,
+        }),
       isBuild && VitePluginStyleInject("curd-create"),
-      // dts({
-      //   insertTypesEntry: true,
-      //   exclude: [],
-      //   entryRoot: path.resolve(__dirname, "./src/components/Form/index.ts"),
-      //   copyDtsFiles: true,
-      // }),
+      isBuild &&
+        dts({
+          insertTypesEntry: true,
+          exclude: [],
+          root: "./dist/types",
+          entryRoot: path.resolve(__dirname, "./src/components/Modal/index.ts"),
+          copyDtsFiles: true,
+        }),
     ],
 
     server: {

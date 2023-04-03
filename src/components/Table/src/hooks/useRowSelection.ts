@@ -11,7 +11,7 @@ import {
   watch,
 } from "vue";
 import { ROW_KEY } from "../const";
-import { omit } from "lodash-es";
+import omit from "lodash-es/omit";
 import { findNodeAll } from "@/utils/helper/treeHelper";
 
 export function useRowSelection(

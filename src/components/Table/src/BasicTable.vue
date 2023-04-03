@@ -71,7 +71,7 @@ import { useTableFooter } from "./hooks/useTableFooter";
 import { useTableForm } from "./hooks/useTableForm";
 import { useDesign } from "@/utils/index";
 
-import { omit } from "lodash-es";
+import omit from "lodash-es/omit";
 import { basicProps } from "./props";
 import { isFunction } from "@/utils/is";
 

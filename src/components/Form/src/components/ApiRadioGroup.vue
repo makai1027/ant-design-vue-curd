@@ -38,7 +38,8 @@ import {
 import { Radio } from "ant-design-vue";
 import { isFunction } from "@/utils/is";
 import propTypes from "ant-design-vue/es/_util/vue-types/index";
-import { get, omit } from "lodash-es";
+import get from "lodash-es/get";
+import omit from "lodash-es/omit";
 
 type OptionsItem = {
   label: string;

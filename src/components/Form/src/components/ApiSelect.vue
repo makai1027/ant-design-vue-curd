@@ -32,7 +32,8 @@ import {
 } from "vue";
 import { Select, Icon } from "ant-design-vue";
 import { isFunction } from "@/utils/is";
-import { get, omit } from "lodash-es";
+import get from "lodash-es/get";
+import omit from "lodash-es/omit";
 
 import propTypes from "ant-design-vue/es/_util/vue-types/index";
 

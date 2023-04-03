@@ -18,7 +18,9 @@ import {
 import { useTimeoutFn } from "@/hooks/core/useTimeout";
 import { buildUUID } from "@/utils/uuid";
 import { isFunction, isBoolean } from "@/utils/is";
-import { get, cloneDeep, merge } from "lodash-es";
+import get from "lodash-es/get";
+import cloneDeep from "lodash-es/cloneDeep";
+import merge from "lodash-es/merge";
 import { FETCH_SETTING, ROW_KEY, PAGE_SIZE } from "../const";
 
 interface ActionType {
