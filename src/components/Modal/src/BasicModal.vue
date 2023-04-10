@@ -1,21 +1,13 @@
 <template>
   <Modal v-bind="getBindValue" @cancel="handleCancel">
     <template #closeIcon v-if="!$slots.closeIcon">
-      <ModalClose
-        :canFullscreen="getProps.canFullscreen"
-        :fullScreen="fullScreenRef"
-        @cancel="handleCancel"
-        @fullscreen="handleFullScreen"
-      />
+      <ModalClose :canFullscreen="getProps.canFullscreen" :fullScreen="fullScreenRef" @cancel="handleCancel"
+        @fullscreen="handleFullScreen" />
     </template>
 
     <template #title v-if="!$slots.title">
-      <ModalHeader
-        name="title"
-        :helpMessage="getProps.helpMessage"
-        :title="getMergeProps.title"
-        @dblclick="handleTitleDbClick"
-      />
+      <ModalHeader name="title" :helpMessage="getProps.helpMessage" :title="getMergeProps.title"
+        @dblclick="handleTitleDbClick" />
     </template>
 
     <template #footer v-if="!$slots.footer">
@@ -26,37 +18,22 @@
       </ModalFooter>
     </template>
 
-    <ModalWrapper
-      :useWrapper="getProps.useWrapper"
-      :footerOffset="wrapperFooterOffset"
-      :fullScreen="fullScreenRef"
-      ref="modalWrapperRef"
-      :loading="getProps.loading"
-      :loading-tip="getProps.loadingTip"
-      :minHeight="getProps.minHeight"
-      :height="getWrapperHeight"
-      :visible="visibleRef"
-      :modalFooterHeight="footer !== undefined && !footer ? 0 : undefined"
-      v-bind="
+    <ModalWrapper :useWrapper="getProps.useWrapper" :footerOffset="wrapperFooterOffset" :fullScreen="fullScreenRef"
+      ref="modalWrapperRef" :loading="getProps.loading" :loading-tip="getProps.loadingTip" :minHeight="getProps.minHeight"
+      :height="getWrapperHeight" :visible="visibleRef"
+      :modalFooterHeight="footer !== undefined && !footer ? 0 : undefined" v-bind="
         omit(getProps.wrapperProps, 'visible', 'height', 'modalFooterHeight')
-      "
-      @ext-height="handleExtHeight"
-      @height-change="handleHeightChange"
-    >
+      " @ext-height="handleExtHeight" @height-change="handleHeightChange">
       <slot></slot>
     </ModalWrapper>
 
-    <template
-      #[item]="data"
-      v-for="item in Object.keys(omit($slots, 'default'))"
-    >
+    <template #[item]="data" v-for="item in Object.keys(omit($slots, 'default'))">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
   </Modal>
 </template>
 <script lang="ts">
 import type { ModalProps } from "./typing";
-
 import {
   defineComponent,
   computed,
@@ -76,13 +53,17 @@ import { isFunction } from "@/utils/is";
 import { deepMerge, useDesign } from "@/utils";
 import { basicProps } from "./props";
 import { useFullScreen } from "./hooks/useModalFullScreen";
-import omit from "lodash-es/omit";
+import { omit } from "lodash-es";
 
 export default defineComponent({
   name: "BasicModal",
   components: { Modal, ModalWrapper, ModalClose, ModalFooter, ModalHeader },
   inheritAttrs: false,
   props: basicProps,
+  model: {
+    prop: 'visible',
+    event: 'update:visible'
+  },
   emits: [
     "visible-change",
     "height-change",

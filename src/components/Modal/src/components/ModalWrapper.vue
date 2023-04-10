@@ -2,10 +2,7 @@
   <ScrollContainer ref="wrapperRef">
     <div ref="spinRef" :style="spinStyle">
       <slot></slot>
-      <div
-        v-if="loading"
-        class="absolute top-0 left-0 w-full h-full flex items-center justify-center"
-      >
+      <div v-if="loading" class="loading-wrapper">
         <Spin ref="spinRef" :tip="loadingTip" />
       </div>
     </div>
@@ -56,7 +53,7 @@ export default defineComponent({
 
     let realHeight = 0;
 
-    let stopElResizeFn: Fn = () => {};
+    let stopElResizeFn: Fn = () => { };
 
     useResizeObserver(document.body, setModalHeight.bind(null, false));
 
@@ -166,8 +163,8 @@ export default defineComponent({
           realHeightRef.value = props.height
             ? props.height
             : realHeight > maxHeight
-            ? maxHeight
-            : realHeight;
+              ? maxHeight
+              : realHeight;
         }
         emit("height-change", unref(realHeightRef));
       } catch (error) {
@@ -179,3 +176,15 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="less" scoped>
+.loading-wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

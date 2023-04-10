@@ -48,12 +48,15 @@ export default defineComponent({
     };
 
     const clickTrackHandler = (e: any) => {
-      console.log(thumb.value);
+      const thumb = instance?.$el.querySelector(
+        ".scrollbar__thumb"
+      ) as HTMLElement;
       const offset = Math.abs(
         e.target.getBoundingClientRect()[bar.value.direction] -
           e[bar.value.client]
       );
-      const thumbHalf = thumb.value[bar.value.offset] / 2;
+      // @ts-ignore
+      const thumbHalf = thumb[bar.value.offset] / 2;
       const thumbPositionPercentage =
         // @ts-ignore
         ((offset - thumbHalf) * 100) / instance?.$el[bar.value.offset];
@@ -71,6 +74,9 @@ export default defineComponent({
 
     const mouseMoveDocumentHandler = (e: any) => {
       if (cursorDown.value === false) return;
+      const thumb = instance?.$el.querySelector(
+        ".scrollbar__thumb"
+      ) as HTMLElement;
       const prevPage = barStore.value[bar.value.axis];
 
       if (!prevPage) return;
@@ -81,7 +87,8 @@ export default defineComponent({
         ] -
           e[bar.value.client]) *
         -1;
-      const thumbClickPosition = thumb.value[bar.value.offset] - prevPage;
+      // @ts-ignore
+      const thumbClickPosition = thumb[bar.value.offset] - prevPage;
       const thumbPositionPercentage =
         // @ts-ignore
         ((offset - thumbClickPosition) * 100) / instance?.$el[bar.value.offset];
@@ -117,7 +124,6 @@ export default defineComponent({
               move: props.move,
               bar: bar.value,
             }),
-            ref: thumb,
             on: {
               mousedown: clickThumbHandler,
             },

@@ -28,10 +28,9 @@
     "tests/**/*.tsx",
     "types/**/*.d.ts",
     "types/**/*.ts",
-    "mock/**/*.ts",
-    "dist/types/useModalContext.d.ts"
+    "mock/**/*.ts"
   ],
-  "exclude": ["node_modules", "vue-project", "dist"],
+  "exclude": ["node_modules", "vue-project"],
   "vueCompilerOptions": {
     "target": 2.7
   }
