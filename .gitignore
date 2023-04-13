@@ -223,6 +223,7 @@ typings/
 .nuxt
 dist
 dist1
+stats.html
 
 # Gatsby files
 .cache/

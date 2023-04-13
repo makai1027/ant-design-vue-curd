@@ -18,11 +18,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue";
 import { useDesign } from "@/utils/index";
 import { Tooltip, Icon } from "ant-design-vue";
 
-export default defineComponent({
+export default {
   name: "ModalClose",
   components: {
     Tooltip,
@@ -32,59 +31,51 @@ export default defineComponent({
     canFullscreen: { type: Boolean, default: true },
     fullScreen: { type: Boolean },
   },
-  emits: ["cancel", "fullscreen"],
-  setup(props, { emit }) {
-    const { prefixCls } = useDesign("basic-modal-close");
+  computed: {
+    getClass(): string[] {
+      const { prefixCls } = useDesign("basic-modal-close");
 
-    const getClass = computed(() => {
       return [
         prefixCls,
         `${prefixCls}--custom`,
-        {
-          [`${prefixCls}--can-full`]: props.canFullscreen,
-        },
+        this.canFullscreen ? `${prefixCls}--can-full` : ''
       ];
-    });
-
-    function handleCancel(e: Event) {
-      emit("cancel", e);
     }
+  },
+  methods: {
+    handleCancel(e: Event) {
+      this.$emit("cancel", e);
+    },
 
-    function handleFullScreen(e: Event) {
+    handleFullScreen(e: Event) {
       e?.stopPropagation();
       e?.preventDefault();
-      emit("fullscreen");
+      this.$emit("fullscreen");
     }
-
-    return {
-      getClass,
-      prefixCls,
-      handleCancel,
-      handleFullScreen,
-    };
   },
-});
+};
 </script>
 <style lang="less">
 @prefix-cls: ~"@{namespace}-basic-modal-close";
+
 .@{prefix-cls} {
   display: flex;
   height: 95%;
   align-items: center;
 
-  > span {
+  >span {
     margin-left: 48px;
     font-size: 16px;
   }
 
   &--can-full {
-    > span {
+    >span {
       margin-left: 12px;
     }
   }
 
   &:not(&--can-full) {
-    > span:nth-child(1) {
+    >span:nth-child(1) {
       &:hover {
         font-weight: 700;
       }

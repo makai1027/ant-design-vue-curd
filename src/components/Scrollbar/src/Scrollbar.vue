@@ -27,19 +27,9 @@
 </template>
 <script lang="ts">
 import { toObject } from "./util";
-import {
-  defineComponent,
-  ref,
-  onMounted,
-  onBeforeUnmount,
-  nextTick,
-  provide,
-  computed,
-  unref,
-} from "vue";
-import Bar from "./bar";
+import Bar from "./bar.vue";
 
-export default defineComponent({
+export default {
   name: "Scrollbar",
   components: { Bar },
   props: {
@@ -69,68 +59,58 @@ export default defineComponent({
       default: "div",
     },
   },
-  setup(props) {
-    const sizeWidth = ref("0");
-    const sizeHeight = ref("0");
-    const moveX = ref(0);
-    const moveY = ref(0);
-    const wrap = ref();
-    const resize = ref();
-
-    provide("scroll-bar-wrap", wrap);
-
-    const style = computed<any>(() => {
-      if (Array.isArray(props.wrapStyle)) {
-        return toObject(props.wrapStyle);
-      }
-      return props.wrapStyle;
-    });
-
-    const handleScroll = () => {
-      if (!props.native) {
-        moveY.value = (unref(wrap).scrollTop * 100) / unref(wrap).clientHeight;
-        moveX.value = (unref(wrap).scrollLeft * 100) / unref(wrap).clientWidth;
-      }
-    };
-
-    const update = () => {
-      if (!unref(wrap)) return;
-      const heightPercentage =
-        (unref(wrap).clientHeight * 100) / unref(wrap).scrollHeight;
-      const widthPercentage =
-        (unref(wrap).clientWidth * 100) / unref(wrap).scrollWidth;
-
-      sizeHeight.value = heightPercentage < 100 ? heightPercentage + "%" : "";
-      sizeWidth.value = widthPercentage < 100 ? widthPercentage + "%" : "";
-    };
-
-    onMounted(() => {
-      if (props.native) return;
-      nextTick(update);
-      if (!props.noresize) {
-        useResizeObserver(unref(resize), update);
-        useResizeObserver(unref(wrap), update);
-        useResizeObserver(document.body, update);
-      }
-    });
-
-    onBeforeUnmount(() => {
-      if (props.native) return;
-    });
-
+  data() {
     return {
-      moveX,
-      moveY,
-      sizeWidth,
-      sizeHeight,
-      style,
-      wrap,
-      resize,
-      update,
-      handleScroll,
+      sizeWidth: "0",
+      sizeHeight: "0",
+      moveX: 0,
+      moveY: 0,
     };
   },
-});
+  computed: {
+    style(): any {
+      if (Array.isArray(this.wrapStyle)) {
+        return toObject(this.wrapStyle);
+      }
+      return this.wrapStyle;
+    },
+  },
+  provide() {
+    return {
+      scrollBarWrap: this.$refs.wrap,
+    };
+  },
+  mounted() {
+    if (this.native) return;
+    this.$nextTick(this.update);
+    if (!this.noresize) {
+      const resize = this.$refs.resize as HTMLElement;
+      const wrap = this.$refs.wrap as HTMLElement;
+      useResizeObserver(resize, this.update);
+      useResizeObserver(wrap, this.update);
+      useResizeObserver(document.body, this.update);
+    }
+  },
+  methods: {
+    handleScroll() {
+      if (!this.native) {
+        const wrap = this.$refs.wrap as HTMLElement;
+        this.moveY = (wrap.scrollTop * 100) / wrap.clientHeight;
+        this.moveX = (wrap.scrollLeft * 100) / wrap.clientWidth;
+      }
+    },
+
+    update() {
+      const wrap = this.$refs.wrap as HTMLElement;
+      if (!wrap) return;
+      const heightPercentage = (wrap.clientHeight * 100) / wrap.scrollHeight;
+      const widthPercentage = (wrap.clientWidth * 100) / wrap.scrollWidth;
+
+      this.sizeHeight = heightPercentage < 100 ? heightPercentage + "%" : "";
+      this.sizeWidth = widthPercentage < 100 ? widthPercentage + "%" : "";
+    },
+  },
+};
 </script>
 <style lang="less">
 .scrollbar {

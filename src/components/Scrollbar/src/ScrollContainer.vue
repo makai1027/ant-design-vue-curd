@@ -5,26 +5,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, unref, nextTick } from "vue";
-import { Scrollbar, ScrollbarType } from "../index";
+import Scrollbar from "./Scrollbar.vue";
 import { useScrollTo } from "@/hooks/event/useScrollTo";
 
-export default defineComponent({
+export default {
   name: "ScrollContainer",
   components: { Scrollbar },
-  setup() {
-    const scrollbarRef = ref<Nullable<ScrollbarType>>(null);
-
+  methods: {
     /**
      * Scroll to the specified position
      */
-    function scrollTo(to: number, duration = 500) {
-      const scrollbar = unref(scrollbarRef);
+    scrollTo(to: number, duration = 500) {
+      const scrollbar = this.$refs.scrollbarRef as HTMLElement & Recordable;
       if (!scrollbar) {
         return;
       }
-      nextTick(() => {
-        const wrap = unref(scrollbar.wrap);
+      this.$nextTick(() => {
+        const wrap = scrollbar.$refs.wrap;
         if (!wrap) {
           return;
         }
@@ -35,26 +32,26 @@ export default defineComponent({
         });
         start();
       });
-    }
+    },
 
-    function getScrollWrap() {
-      const scrollbar = unref(scrollbarRef);
+    getScrollWrap() {
+      const scrollbar = this.$refs.scrollbarRef as HTMLElement & Recordable;
       if (!scrollbar) {
         return null;
       }
-      return scrollbar.wrap;
-    }
+      return scrollbar.$refs.wrap;
+    },
 
     /**
      * Scroll to the bottom
      */
-    function scrollBottom() {
-      const scrollbar = unref(scrollbarRef);
+    scrollBottom() {
+      const scrollbar = this.$refs.scrollbarRef as HTMLElement & Recordable;
       if (!scrollbar) {
         return;
       }
-      nextTick(() => {
-        const wrap = unref(scrollbar.wrap) as any;
+      this.$nextTick(() => {
+        const wrap = scrollbar.$refs.wrap;
         if (!wrap) {
           return;
         }
@@ -65,16 +62,9 @@ export default defineComponent({
         });
         start();
       });
-    }
-
-    return {
-      scrollbarRef,
-      scrollTo,
-      scrollBottom,
-      getScrollWrap,
-    };
+    },
   },
-});
+};
 </script>
 <style lang="less">
 .scroll-container {

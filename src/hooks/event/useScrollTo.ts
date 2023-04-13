@@ -1,5 +1,4 @@
 import { isFunction, isUnDef } from "@/utils/is";
-import { ref, unref } from "vue";
 
 export interface ScrollToParams {
   el: any;
@@ -29,7 +28,7 @@ export function useScrollTo({
   duration = 500,
   callback,
 }: ScrollToParams) {
-  const isActiveRef = ref(false);
+  let isActiveRef = false;
   const start = position(el);
   const change = to - start;
   const increment = 20;
@@ -37,13 +36,13 @@ export function useScrollTo({
   duration = isUnDef(duration) ? 500 : duration;
 
   const animateScroll = function () {
-    if (!unref(isActiveRef)) {
+    if (!isActiveRef) {
       return;
     }
     currentTime += increment;
     const val = easeInOutQuad(currentTime, start, change, duration);
     move(el, val);
-    if (currentTime < duration && unref(isActiveRef)) {
+    if (currentTime < duration && isActiveRef) {
       requestAnimationFrame(animateScroll);
     } else {
       if (callback && isFunction(callback)) {
@@ -52,12 +51,12 @@ export function useScrollTo({
     }
   };
   const run = () => {
-    isActiveRef.value = true;
+    isActiveRef = true;
     animateScroll();
   };
 
   const stop = () => {
-    isActiveRef.value = false;
+    isActiveRef = false;
   };
 
   return { start: run, stop };

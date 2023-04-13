@@ -1,6 +1,6 @@
-<script lang="tsx">
-import type { PropType } from "vue";
-import { defineComponent, computed, unref, h } from "vue";
+<script lang="ts">
+import type { PropType, VNodeChildren, VNode } from "vue";
+import { h } from "vue";
 import { Tooltip, Icon } from "ant-design-vue";
 import { getPopupContainer, useDesign } from "@/utils";
 import { isString, isArray } from "@/utils/is";
@@ -37,23 +37,21 @@ const props = {
   text: { type: [Array, String] as PropType<string[] | string> },
 };
 
-export default defineComponent({
+export default {
   name: "BasicHelp",
   components: { Tooltip },
   props,
-  setup(props, { slots }) {
-    const { prefixCls } = useDesign("basic-help");
-
-    const getTooltipStyle = computed(
-      (): Recordable => ({ color: props.color, fontSize: props.fontSize })
-    );
-
-    const getOverlayStyle = computed(
-      (): Recordable => ({ maxWidth: props.maxWidth })
-    );
-
-    function renderTitle() {
-      const textList = props.text;
+  computed: {
+    getTooltipStyle(): Recordable {
+      return { color: this.color, fontSize: this.fontSize };
+    },
+    getOverlayStyle(): Recordable {
+      return { maxWidth: this.maxWidth };
+    },
+  },
+  methods: {
+    renderTitle(): VNode | null {
+      const textList = this.text;
 
       if (isString(textList)) {
         return h("p", {}, textList);
@@ -67,34 +65,56 @@ export default defineComponent({
             return h(
               "p",
               { attrs: { key: text } },
-              (props.showIndex ? `${index + 1}. ` : "") + text
+              (this.showIndex ? `${index + 1}. ` : "") + text
             );
           })
         );
       }
       return null;
-    }
-
-    return () => {
-      return (
-        <Tooltip
-          overlayClassName={`${prefixCls}__wrap`}
-          autoAdjustOverflow={true}
-          overlayStyle={unref(getOverlayStyle)}
-          placement={props.placement as "right"}
-          getPopupContainer={() => getPopupContainer()}
-        >
-          <template slot="title">
-            <div style={unref(getTooltipStyle)}>{renderTitle()}</div>
-          </template>
-          <span class={prefixCls}>
-            {getSlot(slots) || <Icon type="info-circle" />}
-          </span>
-        </Tooltip>
-      );
-    };
+    },
   },
-});
+  render(_h) {
+    const { prefixCls } = useDesign("basic-help");
+    return _h(
+      Tooltip,
+      {
+        props: {
+          overlayClassName: `${prefixCls}__wrap`,
+          autoAdjustOverflow: true,
+          overlayStyle: this.getOverlayStyle,
+          placement: this.placement || "right",
+          getPopupContainer: () => getPopupContainer(),
+        },
+        scopedSlots: {
+          title: () =>
+            _h(
+              "div",
+              {
+                style: this.getTooltipStyle,
+              },
+              [this.renderTitle() as VNodeChildren]
+            ),
+        },
+      },
+      [
+        _h(
+          "span",
+          {
+            class: prefixCls,
+            scopedSlots: getSlot(this.$slots),
+          },
+          [
+            _h(Icon, {
+              props: {
+                type: "info-circle",
+              },
+            }),
+          ]
+        ),
+      ]
+    );
+  },
+};
 </script>
 <style lang="less">
 @prefix-cls: ~"@{namespace}-basic-help";

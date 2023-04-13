@@ -1,47 +1,34 @@
 <template>
   <div>
     <slot name="insertFooter"></slot>
-    <a-button
-      v-bind="cancelButtonProps"
-      @click="handleCancel"
-      v-if="showCancelBtn"
-    >
+    <a-button v-bind="cancelButtonProps" @click="handleCancel" v-if="showCancelBtn">
       {{ cancelText }}
     </a-button>
     <slot name="centerFooter"></slot>
-    <a-button
-      :type="okType"
-      @click="handleOk"
-      :loading="confirmLoading"
-      v-bind="okButtonProps"
-      v-if="showOkBtn"
-    >
+    <a-button :type="okType" @click="handleOk" :loading="confirmLoading" v-bind="okButtonProps" v-if="showOkBtn">
       {{ okText }}
     </a-button>
     <slot name="appendFooter"></slot>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
 import { Button } from "ant-design-vue";
 import { basicProps } from "../props";
-export default defineComponent({
+export default {
   name: "BasicModalFooter",
   components: {
     [Button.name]: Button,
   },
   props: basicProps,
-  emits: ["ok", "cancel"],
-  setup(_, { emit }) {
-    function handleOk(e: Event) {
-      emit("ok", e);
-    }
+  methods: {
+    handleOk(e: Event) {
+      this.$emit("ok", e);
+    },
 
-    function handleCancel(e: Event) {
-      emit("cancel", e);
-    }
-
-    return { handleOk, handleCancel };
+    handleCancel(e: Event) {
+      this.$emit("cancel", e);
+    },
   },
-});
+
+};
 </script>
