@@ -28,7 +28,6 @@ declare module '@vue/runtime-core' {
     FormItem: typeof import('./../src/components/Form/src/components/FormItem.vue')['default']
     FullScreenSetting: typeof import('./../src/components/Table/src/components/settings/FullScreenSetting.vue')['default']
     HeaderCell: typeof import('./../src/components/Table/src/components/HeaderCell.vue')['default']
-    Main: typeof import('./../src/components/Scrollbar/src11/main.vue')['default']
     MdiAlien: typeof import('~icons/mdi/alien')['default']
     MdiGithub: typeof import('~icons/mdi/github')['default']
     MdiMoonWaningCrescent: typeof import('~icons/mdi/moon-waning-crescent')['default']

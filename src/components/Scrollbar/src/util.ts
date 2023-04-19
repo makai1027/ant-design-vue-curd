@@ -44,3 +44,34 @@ export function toObject<T>(arr: Array<T>): Recordable<T> {
   }
   return res;
 }
+
+export type ResizeObserverCallback = (
+  entries: ReadonlyArray<ResizeObserverEntry>,
+  observer: ResizeObserver
+) => void;
+
+export const useResizeObserver = (
+  target: HTMLElement,
+  callback: ResizeObserverCallback,
+  options: Recordable = {}
+) => {
+  let observer: ResizeObserver | undefined;
+  const isSupported = () => window && "ResizeObserver" in window;
+
+  const cleanup = () => {
+    if (observer) {
+      observer.disconnect();
+      observer = undefined;
+    }
+  };
+
+  cleanup();
+  if (isSupported() && window) {
+    observer = new ResizeObserver(callback);
+    observer!.observe(target, options);
+  }
+
+  return {
+    cleanup,
+  };
+};

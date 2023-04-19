@@ -26,9 +26,17 @@
   </div>
 </template>
 <script lang="ts">
-import { toObject } from "./util";
+import { toObject, useResizeObserver } from "./util";
 import Bar from "./bar.vue";
-
+type DataState = {
+  sizeWidth: string;
+  sizeHeight: string;
+  moveX: number;
+  moveY: number;
+  stop0: (() => void) | null;
+  stop1: (() => void) | null;
+  stop2: (() => void) | null;
+};
 export default {
   name: "Scrollbar",
   components: { Bar },
@@ -59,12 +67,15 @@ export default {
       default: "div",
     },
   },
-  data() {
+  data(): DataState {
     return {
       sizeWidth: "0",
       sizeHeight: "0",
       moveX: 0,
       moveY: 0,
+      stop0: null,
+      stop1: null,
+      stop2: null,
     };
   },
   computed: {
@@ -86,9 +97,12 @@ export default {
     if (!this.noresize) {
       const resize = this.$refs.resize as HTMLElement;
       const wrap = this.$refs.wrap as HTMLElement;
-      useResizeObserver(resize, this.update);
-      useResizeObserver(wrap, this.update);
-      useResizeObserver(document.body, this.update);
+      const { cleanup: stop0 } = useResizeObserver(resize, this.update);
+      this.stop0 = stop0;
+      const { cleanup: stop1 } = useResizeObserver(wrap, this.update);
+      this.stop1 = stop1;
+      const { cleanup: stop2 } = useResizeObserver(document.body, this.update);
+      this.stop2 = stop2;
     }
   },
   methods: {
@@ -109,6 +123,11 @@ export default {
       this.sizeHeight = heightPercentage < 100 ? heightPercentage + "%" : "";
       this.sizeWidth = widthPercentage < 100 ? widthPercentage + "%" : "";
     },
+  },
+  beforeDestroy() {
+    this.stop0 && this.stop0();
+    this.stop1 && this.stop1();
+    this.stop2 && this.stop2();
   },
 };
 </script>

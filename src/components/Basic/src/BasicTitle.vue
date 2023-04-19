@@ -35,6 +35,11 @@ export default {
      */
     normal: { type: Boolean },
   },
+  data() {
+    return {
+      prefixCls: "",
+    };
+  },
   components: {
     BasicHelp,
   },
@@ -48,6 +53,10 @@ export default {
         { [`${prefixCls}-normal`]: this.normal },
       ];
     },
+  },
+  created() {
+    const { prefixCls } = useDesign("basic-title");
+    this.prefixCls = prefixCls;
   },
 };
 </script>

@@ -11,7 +11,6 @@
 <script lang="ts">
 import { Spin } from "ant-design-vue";
 import { ScrollContainer } from "@/components/Scrollbar/index";
-import { useResizeObserver } from "@vueuse/core";
 import { debounce } from "lodash-es";
 const props = {
   loading: { type: Boolean },
@@ -30,6 +29,7 @@ type DataState = {
   realHeightRef: number;
   minRealHeightRef: number;
   observer: MutationObserver | undefined;
+  resizeObserver: ResizeObserver | undefined;
 };
 
 export default {
@@ -42,6 +42,7 @@ export default {
       realHeightRef: 0,
       minRealHeightRef: 0,
       observer: undefined,
+      resizeObserver: undefined,
     };
   },
   computed: {
@@ -71,8 +72,7 @@ export default {
     const { modalHeaderHeight, modalFooterHeight } = this;
     this.$emit("ext-height", modalHeaderHeight + modalFooterHeight);
     this.$nextTick(() => {
-      useResizeObserver(
-        document.body,
+      this.bodyResizeObserver(
         debounce(() => {
           this.setModalHeight();
         }, 200)
@@ -83,6 +83,13 @@ export default {
     });
   },
   methods: {
+    bodyResizeObserver(callback: () => any) {
+      const isSupported = () => window && "ResizeObserver" in window;
+      if (isSupported() && window) {
+        this.resizeObserver = new ResizeObserver(callback);
+        this.resizeObserver!.observe(document.body, {});
+      }
+    },
     domObserver(target: HTMLElement, callback: () => any) {
       const isSupported = () => window && "MutationObserver" in window;
 
@@ -108,7 +115,7 @@ export default {
     async setModalHeight() {
       // 解决在弹窗关闭的时候监听还存在,导致再次打开弹窗没有高度
       // 加上这个,就必须在使用的时候传递父级的visible
-      if (!props.visible) return;
+      if (!this.visible) return;
 
       const wrapperRefDom = this.$refs.wrapperRef;
       if (!wrapperRefDom) return;
@@ -153,8 +160,8 @@ export default {
           this.realHeightRef = this.height
             ? this.height
             : realHeight > maxHeight
-              ? maxHeight
-              : realHeight;
+            ? maxHeight
+            : realHeight;
         }
         this.$emit("height-change", this.realHeightRef);
       } catch (error) {
@@ -166,6 +173,10 @@ export default {
     if (this.observer) {
       this.observer.disconnect();
       this.observer = undefined;
+    }
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = undefined;
     }
   },
 };

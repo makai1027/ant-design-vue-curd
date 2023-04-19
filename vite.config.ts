@@ -115,12 +115,12 @@ export default ({ command }: ConfigEnv): UserConfig => {
           brotliSize: true,
         }),
       isBuild && VitePluginStyleInject("curd-create"),
-      dts({
-        insertTypesEntry: true,
-        exclude: [],
-        entryRoot: path.resolve(__dirname, "./src/components/Modal/index.ts"),
-        copyDtsFiles: true,
-      }),
+      // dts({
+      //   insertTypesEntry: true,
+      //   exclude: [],
+      //   entryRoot: path.resolve(__dirname, "./src/components/Modal/index.ts"),
+      //   copyDtsFiles: true,
+      // }),
     ],
 
     server: {
